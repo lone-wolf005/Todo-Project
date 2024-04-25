@@ -17,10 +17,12 @@ export const getMyprofile =(req,res)=>{
   try {
     const{email,password}=req.body;
     const user = await User.findOne({email}).select("+password");
-if(!user) return ErrorHandler("User is not found",404);      
+ if(!user){
+     return next(new ErrorHandler("Please Register first",400));
+    }      
 
 const isMatch = await bcrypt.compare(password,user.password);
-if(!isMatch)return ErrorHandler("Invalid Password",400);
+if(!isMatch)return next(new ErrorHandler("Please Enter Correct Password",404));
 
 sendCookies(user,res,`welcome back,${user.name}`);
     
@@ -36,7 +38,7 @@ sendCookies(user,res,`welcome back,${user.name}`);
 
   let user = await User.findOne({email});
 
-  if(user)return ErrorHandler("User is already Exist",400);
+   return next(new ErrorHandler("User Email already Exist",400));
 
   const hashedPassword = await bcrypt.hash(password,10);
   user = await User.create({name,email,password:hashedPassword});
