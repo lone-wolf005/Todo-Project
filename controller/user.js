@@ -38,7 +38,7 @@ sendCookies(user,res,`welcome back,${user.name}`);
 
   let user = await User.findOne({email});
 
-   return next(new ErrorHandler("User Email already Exist",400));
+  if(user) return next(new ErrorHandler("User Email already Exist",400));
 
   const hashedPassword = await bcrypt.hash(password,10);
   user = await User.create({name,email,password:hashedPassword});
