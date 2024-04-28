@@ -60,14 +60,12 @@ export const deleteTask= async(req,res,next)=>{
             if(!task){
              return next(new ErrorHandler("Invalid Operation",404));
             }
-            task.isCompleted= !task.isCompleted;
-            await task.save();
-  
-  
-           res.status(200).json({
-              success:true,
-              messege:"task updated",
-           });
+            await task.deleteOne();
+
+            res.status(200).json({
+            message: "Task Deleted!",
+            success: true,
+    });
             
          } catch (error) {
             next(error);
